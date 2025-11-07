@@ -11,7 +11,6 @@ import {
   Recycle,
   Menu,
   X,
-  CheckCircle2,
 } from "lucide-react";
 import "./Layout.css";
 
@@ -43,7 +42,11 @@ const Layout = ({ children }) => {
         <div className="sidebar-header">
           <div className="logo">
             <div className="logo-icon-wrapper">
-              <CheckCircle2 className="logo-icon" />
+              <img
+                src="/Logo healh.png"
+                alt="Health On Time Logo"
+                className="logo-image"
+              />
             </div>
             <div className="logo-text">
               <h1>Health On Time</h1>
