@@ -1,3 +1,5 @@
+import { useExames } from "../hooks/useExames";
+import { useAtividades } from "../hooks/useAtividades";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -12,8 +14,6 @@ import {
   Car,
   TrendingUp,
 } from "lucide-react";
-import { useExames } from "../hooks/useExames";
-import { useAtividades } from "../hooks/useAtividades";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -23,8 +23,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const { exames, proximosExames } = useExames();
-  const { estatisticas } = useAtividades();
+  const { exames = [], proximosExames = [] } = useExames() || {};
+  const { estatisticas = { atividadesEstaSemana: 0 } } = useAtividades() || {};
   const [activeTab, setActiveTab] = useState("saude");
   const [stats, setStats] = useState({
     examesPendentes: 0,
@@ -43,8 +43,7 @@ const Dashboard = () => {
     });
 
     setStats({
-      examesPendentes: exames.filter((e) => new Date(e.data) < new Date())
-        .length,
+      examesPendentes: exames.filter((e) => new Date(e.data) < new Date()).length,
       examesProximos: proximos.length,
       atividadesHoje: estatisticas.atividadesEstaSemana,
     });

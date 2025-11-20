@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import ChatSaude from "./pages/ChatSaude";
@@ -8,13 +9,32 @@ import PontosColeta from "./pages/PontosColeta";
 import Exames from "./pages/Exames";
 import Atividades from "./pages/Atividades";
 import SaudeMental from "./pages/SaudeMental";
+import Login from "./pages/Login";
+import Cadastro from "./pages/Cadastro";
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const handleLogin = (email, password) => {
+    if (email && password) {
+      setLoggedIn(true);
+    }
+  };
+  const handleRegister = (novoUsuario) => {
+    console.log("Novo usuário cadastrado:", novoUsuario);
+  };
+
   return (
-    <Router>
-      <Layout>
+    <Layout>
+      {!loggedIn ? (
+        <Routes>
+          <Route path="/" element={<Login onLogin={handleLogin} />} />
+          <Route path="/cadastro" element={<Cadastro onRegister={handleRegister} />} />
+        </Routes>
+      ) : (
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chat" element={<ChatSaude />} />
           <Route path="/localizar" element={<Localizar />} />
           <Route path="/educacao" element={<Educacao />} />
@@ -23,8 +43,8 @@ function App() {
           <Route path="/atividades" element={<Atividades />} />
           <Route path="/saude-mental" element={<SaudeMental />} />
         </Routes>
-      </Layout>
-    </Router>
+      )}
+    </Layout>
   );
 }
 
