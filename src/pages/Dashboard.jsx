@@ -1,4 +1,5 @@
-import { useExames } from "../hooks/useExames";
+// Dashboard.jsx
+import { useExamesAPI } from "../hooks/useExames";
 import { useAtividades } from "../hooks/useAtividades";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -23,8 +24,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const { exames = [], proximosExames = [] } = useExames() || {};
-  const { estatisticas = { atividadesEstaSemana: 0 } } = useAtividades() || {};
+  const apiUrl = "http://localhost:3000/"; // Substitua pelo URL real
+  const token = ""; // Substitua pelo token real se necessário
+
+  const { exames = [], loading: examesLoading } = useExamesAPI(apiUrl, token);
+  const { estatisticas } = useAtividades() || {};
+  const atividadesEstaSemana = estatisticas?.atividadesEstaSemana || 0;
+
   const [activeTab, setActiveTab] = useState("saude");
   const [stats, setStats] = useState({
     examesPendentes: 0,
@@ -32,8 +38,10 @@ const Dashboard = () => {
     atividadesHoje: 0,
   });
 
+  // 🔹 UseEffect corrigido: dependências estáveis
   useEffect(() => {
     const hoje = new Date();
+
     const proximos = exames.filter((exame) => {
       const dataExame = new Date(exame.data);
       return (
@@ -43,11 +51,11 @@ const Dashboard = () => {
     });
 
     setStats({
-      examesPendentes: exames.filter((e) => new Date(e.data) < new Date()).length,
+      examesPendentes: exames.filter((e) => !e.realizado).length,
       examesProximos: proximos.length,
-      atividadesHoje: estatisticas.atividadesEstaSemana,
+      atividadesHoje: atividadesEstaSemana,
     });
-  }, [exames, estatisticas]);
+  }, [exames, atividadesEstaSemana]); // <-- Dependências corrigidas
 
   const quickActions = [
     {
@@ -153,7 +161,8 @@ const Dashboard = () => {
         })}
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      {/* 🔹 Tabs com onValueChange ajustado */}
+      <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val)} className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-3">
           <TabsTrigger value="saude">Saúde</TabsTrigger>
           <TabsTrigger value="sustentabilidade">Sustentabilidade</TabsTrigger>
@@ -163,71 +172,11 @@ const Dashboard = () => {
 
       <TabsContent value={activeTab} className="mt-6">
         <div className="charts-section">
-          <Card>
-            <CardHeader>
-              <CardTitle>Consultas por Severidade</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="chart-placeholder">
-                <div className="chart-legend">
-                  <div className="legend-item">
-                    <span
-                      className="legend-color"
-                      style={{ background: "#10b981" }}
-                    ></span>
-                    <span>Baixo: 1</span>
-                  </div>
-                  <div className="legend-item">
-                    <span
-                      className="legend-color"
-                      style={{ background: "#f97316" }}
-                    ></span>
-                    <span>Moderado: 1</span>
-                  </div>
-                  <div className="legend-item">
-                    <span
-                      className="legend-color"
-                      style={{ background: "#ef4444" }}
-                    ></span>
-                    <span>Urgente: 0</span>
-                  </div>
-                </div>
-                <div className="donut-chart">
-                  <div className="donut-segment segment-low"></div>
-                  <div className="donut-segment segment-moderate"></div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Consultas nos Últimos 7 Dias</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="line-chart-placeholder">
-                <div className="chart-grid">
-                  <div className="grid-line"></div>
-                  <div className="grid-line"></div>
-                  <div className="grid-line"></div>
-                  <div className="grid-line"></div>
-                </div>
-                <div className="chart-labels">
-                  <span>sex.</span>
-                  <span>sáb.</span>
-                  <span>dom.</span>
-                  <span>seg.</span>
-                  <span>ter.</span>
-                  <span>qua.</span>
-                  <span>qui.</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Gráficos de exemplo */}
         </div>
       </TabsContent>
 
-      {proximosExames.length > 0 && (
+      {exames.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -237,26 +186,29 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="exames-list">
-              {proximosExames.slice(0, 3).map((exame) => (
-                <div key={exame.id} className="exame-item">
-                  <div className="exame-info">
-                    <h4>{exame.nome}</h4>
-                    {exame.tipo && (
-                      <Badge variant="secondary" className="mt-1">
-                        {exame.tipo}
-                      </Badge>
-                    )}
+              {exames
+                .filter((e) => !e.realizado)
+                .slice(0, 3)
+                .map((exame) => (
+                  <div key={exame._id} className="exame-item">
+                    <div className="exame-info">
+                      <h4>{exame.nome}</h4>
+                      {exame.tipo && (
+                        <Badge variant="secondary" className="mt-1">
+                          {exame.tipo}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="exame-date">
+                      <Calendar size={16} />
+                      <span>
+                        {format(new Date(exame.data), "dd 'de' MMMM 'de' yyyy", {
+                          locale: ptBR,
+                        })}
+                      </span>
+                    </div>
                   </div>
-                  <div className="exame-date">
-                    <Calendar size={16} />
-                    <span>
-                      {format(new Date(exame.data), "dd 'de' MMMM 'de' yyyy", {
-                        locale: ptBR,
-                      })}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
             <Button asChild className="mt-4">
               <Link to="/exames">Ver Todos os Exames</Link>

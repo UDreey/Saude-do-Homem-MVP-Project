@@ -1,22 +1,31 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { auth } from "../services/apiService";
 import "./Login.css";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // Adicionado
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validação de exemplo
-    if (email === "teste@gmail.com" && password === "111") {
-      setError("");
-      onLogin(email, password);
+    setError("");
+
+    try {
+      // Faz login no MongoDB
+      const resultado = await auth.login(email, password);
+      
+      // Chama a função onLogin se existir
+      if (onLogin) {
+        onLogin(email, password);
+      }
+      
+      // Redireciona para dashboard
       navigate("/dashboard");
-    } else {
-      setError("Email ou senha inválidos!");
+    } catch (err) {
+      setError(err.message || "Email ou senha inválidos!");
     }
   };
 
