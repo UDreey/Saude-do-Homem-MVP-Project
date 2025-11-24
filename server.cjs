@@ -23,8 +23,9 @@ app.use((req, res, next) => {
 });
 
 // Configuração do MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://admindev:6LwpNFrlGm7cZdLk@healthontimedb.ykjsv59.mongodb.net/?appName=HealthOnTimedb/health-on-time';
-const JWT_SECRET = process.env.JWT_SECRET || '52e4ead6-e7b4-460e-ba45-6d402f170742';
+const MONGODB_URI = process.env.MONGODB_URI;
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 console.log('🔧 Tentando conectar ao MongoDB...');
 console.log('🔧 URI:', MONGODB_URI.replace(/\/\/.*@/, '//***:***@')); // Esconde credenciais
