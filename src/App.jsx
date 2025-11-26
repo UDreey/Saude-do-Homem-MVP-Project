@@ -57,13 +57,13 @@ function App() {
     <Layout>
       {!loggedIn ? (
         <Routes>
-          <Route path="/" element={<Cadastro onRegister={handleRegister} />} />
+          <Route path="/" element={<Login onLogin={handleLogin} />} />
           <Route
             path="/cadastro"
             element={<Cadastro onRegister={handleRegister} />}
           />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       ) : (
         <Routes>
