@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, Outlet } from "react-router-dom"; // <-- IMPORTANTE
 import {
   Home,
   Calendar,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import "./Layout.css";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -30,9 +30,7 @@ const Layout = ({ children }) => {
   ];
 
   const isActive = (path) => {
-    if (path === "/") {
-      return location.pathname === "/";
-    }
+    if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
   };
 
@@ -70,9 +68,7 @@ const Layout = ({ children }) => {
                 <li key={item.path}>
                   <Link
                     to={item.path}
-                    className={`nav-link ${
-                      isActive(item.path) ? "active" : ""
-                    }`}
+                    className={`nav-link ${isActive(item.path) ? "active" : ""}`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Icon className="nav-icon" size={20} />
@@ -96,7 +92,9 @@ const Layout = ({ children }) => {
       </aside>
 
       <div className="main-wrapper">
-        <main className="main-content">{children}</main>
+        <main className="main-content">
+          <Outlet /> {/* <-- ESSENCIAL */}
+        </main>
       </div>
     </div>
   );

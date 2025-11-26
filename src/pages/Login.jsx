@@ -122,7 +122,7 @@ export default function Login({ onLogin }) {
         <CardFooter className="login-footer">
           <p className="login-footer-text">
             Ainda não tem conta?{" "}
-            <Link to="/" className="login-link">
+            <Link to="/Cadastro" className="login-link">
               Cadastre-se
             </Link>
           </p>

@@ -173,7 +173,7 @@ export default function Cadastro({ onRegister }) {
         <CardFooter className="cadastro-footer">
           <p className="cadastro-footer-text">
             Já tem conta?{" "}
-            <Link to="/login" className="cadastro-link">
+            <Link to="/Login" className="cadastro-link">
               Faça login
             </Link>
           </p>
