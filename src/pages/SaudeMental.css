@@ -2,6 +2,178 @@
   animation: fadeIn 0.5s ease-in;
 }
 
+.page-header {
+  margin-bottom: 2.5rem;
+}
+
+.header-content-mental {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-icon-mental {
+  color: var(--primary-color);
+}
+
+.page-header p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.stats-header-mental {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stat-badge-mental {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  );
+  color: white;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+}
+
+.stat-badge-mental svg {
+  flex-shrink: 0;
+}
+
+.exercicios-section {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.05),
+    rgba(239, 68, 68, 0.05)
+  );
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border-color);
+}
+
+.section-header-mental {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-header-mental h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.section-header-mental svg {
+  color: var(--primary-color);
+}
+
+.exercicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.exercicio-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--border-color);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.exercicio-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medical);
+  border-color: var(--primary-color);
+}
+
+.exercicio-card.completed {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1),
+    rgba(16, 185, 129, 0.05)
+  );
+  border-color: var(--success-color);
+}
+
+.exercicio-check {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.exercicio-check .checked {
+  color: var(--success-color);
+}
+
+.exercicio-check .unchecked {
+  color: var(--text-light);
+}
+
+.exercicio-content {
+  flex: 1;
+}
+
+.exercicio-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.exercicio-desc {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 0.75rem 0;
+}
+
+.exercicio-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.meta-item-mental {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.meta-item-mental.points {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
 .intro-card {
   text-align: center;
   margin-bottom: 2rem;
@@ -55,6 +227,10 @@
   font-weight: 500;
   color: var(--text-secondary);
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .tab:hover {
@@ -206,25 +382,145 @@
   background: var(--bg-light);
   border-radius: var(--radius-md);
   border-left: 4px solid var(--success-color);
+  transition: all 0.3s ease;
 }
 
-.dica-numero {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--success-color);
-  color: white;
+.dica-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.dica-icon-item {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.1),
+    rgba(16, 185, 129, 0.1)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
+  color: var(--primary-color);
   flex-shrink: 0;
 }
 
+.dica-content-item {
+  flex: 1;
+}
+
+.dica-numero {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--success-color);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-right: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
 .dica-item p {
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   color: var(--text-secondary);
   line-height: 1.8;
+}
+
+.dica-categoria-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary-color);
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.exercicios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exercicio-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--bg-light);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.exercicio-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.exercicio-item.completed {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1),
+    rgba(16, 185, 129, 0.05)
+  );
+  border-color: var(--success-color);
+}
+
+.exercicio-item-check {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.exercicio-item-check .checked {
+  color: var(--success-color);
+}
+
+.exercicio-item-check .unchecked {
+  color: var(--text-light);
+}
+
+.exercicio-item-content {
+  flex: 1;
+}
+
+.exercicio-item-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.exercicio-item-content p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 0.75rem 0;
+}
+
+.exercicio-item-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.exercicio-item-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.exercicio-item-meta span.points {
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 .mensagem-final {
@@ -263,8 +559,28 @@
 }
 
 @media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .header-content-mental {
+    flex-direction: column;
+  }
+
+  .stats-header-mental {
+    width: 100%;
+  }
+
+  .exercicios-grid {
+    grid-template-columns: 1fr;
+  }
+
   .tabs {
     flex-direction: column;
+  }
+
+  .tab {
+    width: 100%;
   }
 
   .recursos-grid {
@@ -283,5 +599,9 @@
   .dica-item {
     flex-direction: column;
     gap: 0.75rem;
+  }
+
+  .exercicio-item {
+    flex-direction: column;
   }
 }
