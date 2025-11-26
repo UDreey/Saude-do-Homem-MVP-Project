@@ -13,7 +13,7 @@ export const useExamesAPI = (apiUrl, token) => {
     setError(null);
     try {
       const data = await itens.listar();
-      const mapped = (data.itens || []).map(item => {
+      const mapped = (data.itens || []).map((item) => {
         // Divide o tipo e observações a partir da descrição
         const [tipo, ...obs] = (item.descricao || "").split(" ");
         return {
@@ -21,8 +21,11 @@ export const useExamesAPI = (apiUrl, token) => {
           nome: item.titulo,
           tipo: tipo || "",
           observacoes: obs.join(" ") || "",
-          data: exame.data && exame.data !== "" ? new Date(exame.data).toISOString() : new Date().toISOString(),
-          realizado: item.realizado || false
+          data:
+            item.data && item.data !== ""
+              ? new Date(item.data).toISOString()
+              : new Date().toISOString(),
+          realizado: item.realizado || false,
         };
       });
       setExames(mapped);
@@ -46,7 +49,10 @@ export const useExamesAPI = (apiUrl, token) => {
         body: JSON.stringify({
           titulo: exame.nome,
           descricao: `${exame.tipo || ""} ${exame.observacoes || ""}`.trim(),
-          data: exame.data && exame.data !== "" ? new Date(exame.data).toISOString() : new Date().toISOString(),
+          data:
+            exame.data && exame.data !== ""
+              ? new Date(exame.data).toISOString()
+              : new Date().toISOString(),
           realizado: exame.realizado || false,
         }),
       });
@@ -68,11 +74,14 @@ export const useExamesAPI = (apiUrl, token) => {
         nome: exame.nome,
         tipo: exame.tipo,
         observacoes: exame.observacoes,
-        data: exame.data && exame.data !== "" ? new Date(exame.data).toISOString() : new Date().toISOString(),
+        data:
+          exame.data && exame.data !== ""
+            ? new Date(exame.data).toISOString()
+            : new Date().toISOString(),
         realizado: exame.realizado || false,
       };
 
-      setExames(prev => [...prev, novoExame]);
+      setExames((prev) => [...prev, novoExame]);
     } catch (err) {
       console.error("❌ Adicionar exame:", err.message);
       setError(err.message);
@@ -84,7 +93,7 @@ export const useExamesAPI = (apiUrl, token) => {
     setError(null);
     try {
       await itens.deletar(id);
-      setExames(prev => prev.filter(e => e._id !== id));
+      setExames((prev) => prev.filter((e) => e._id !== id));
     } catch (err) {
       setError(err.message);
     }
@@ -94,13 +103,15 @@ export const useExamesAPI = (apiUrl, token) => {
   const marcarRealizado = async (id) => {
     setError(null);
     try {
-      const exame = exames.find(e => e._id === id);
+      const exame = exames.find((e) => e._id === id);
       if (!exame) throw new Error("Exame não encontrado");
 
       const descricao = `${exame.tipo || ""} ${exame.observacoes || ""}`.trim();
       await itens.atualizar(id, exame.nome, descricao);
 
-      setExames(prev => prev.map(e => e._id === id ? { ...e, realizado: true } : e));
+      setExames((prev) =>
+        prev.map((e) => (e._id === id ? { ...e, realizado: true } : e))
+      );
     } catch (err) {
       setError(err.message);
     }
@@ -117,6 +128,6 @@ export const useExamesAPI = (apiUrl, token) => {
     fetchExames,
     adicionarExame,
     removerExame,
-    marcarRealizado
+    marcarRealizado,
   };
 };

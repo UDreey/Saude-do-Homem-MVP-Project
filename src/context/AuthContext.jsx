@@ -1,6 +1,6 @@
 // src/context/AuthContext.jsx
-import { createContext, useState, useContext, useEffect } from 'react';
-import { auth } from '../services/apiService';
+import { createContext, useState, useContext, useEffect } from "react";
+import { auth } from "../services/apiService";
 
 const AuthContext = createContext();
 
@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
 
   // Verificar se já está logado ao carregar
   useEffect(() => {
-    const usuarioSalvo = auth.getUsuarioLogado();
+    const usuarioSalvo = auth.getUsuarioLocal();
     if (usuarioSalvo) {
       setUsuario(usuarioSalvo);
     }
@@ -46,14 +46,16 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      usuario, 
-      login, 
-      registro, 
-      logout, 
-      isAuthenticated,
-      loading 
-    }}>
+    <AuthContext.Provider
+      value={{
+        usuario,
+        login,
+        registro,
+        logout,
+        isAuthenticated,
+        loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -62,7 +64,7 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
   }
   return context;
 }

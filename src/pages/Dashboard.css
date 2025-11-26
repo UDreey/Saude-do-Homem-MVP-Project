@@ -93,6 +93,10 @@
   color: var(--success-color);
 }
 
+.kpi-trend.trend-warning {
+  color: var(--warning-color);
+}
+
 .kpi-content h3 {
   font-size: 2.5rem;
   font-weight: 800;
@@ -554,6 +558,38 @@
   z-index: 1;
   line-height: 1.6;
   font-weight: 500;
+}
+
+.empty-dashboard-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.03),
+    rgba(16, 185, 129, 0.03)
+  );
+  border-radius: var(--radius-xl);
+  border: 2px dashed var(--border-color);
+}
+
+.empty-dashboard-state .empty-icon {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  opacity: 0.6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.empty-dashboard-state h3 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.empty-dashboard-state p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
 }
 
 @media (max-width: 768px) {

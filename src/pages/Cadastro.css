@@ -1,16 +1,248 @@
 .cadastro-backdrop {
   position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.15);
-  display: flex; align-items: center; justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.1) 0%,
+    rgba(16, 185, 129, 0.1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 9999;
+  padding: 1rem;
+  overflow-y: auto;
 }
-.cadastro-form {
-  background: #fff;
-  padding: 2rem 2.5rem;
-  border-radius: 8px;
-  min-width: 320px;
+
+.cadastro-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.5);
+  border: none;
+  animation: slideUp 0.4s ease-out;
 }
-.cadastro-form h2 { color: #1e90ff; text-align: center;}
-.cadastro-form input { margin-bottom: 1em; width: 100%; padding: 0.6em; border-radius: 4px; border: 1px solid #dfe;}
-.cadastro-form button { background: #1e90ff; color: #fff; border: none; border-radius: 4px; padding: 0.7em; width: 100%; cursor: pointer;}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cadastro-header {
+  text-align: center;
+  padding-bottom: 1.5rem;
+}
+
+.cadastro-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.cadastro-logo-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #10b981 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+}
+
+.cadastro-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #2563eb 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cadastro-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.cadastro-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cadastro-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+  animation: shake 0.3s ease-in-out;
+}
+
+.cadastro-success {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.5rem;
+  color: #16a34a;
+  font-size: 0.875rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.cadastro-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cadastro-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cadastro-input-icon {
+  position: absolute;
+  left: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cadastro-input {
+  padding-left: 2.75rem !important;
+  height: 2.75rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.cadastro-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.cadastro-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cadastro-hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: -0.25rem;
+  margin-left: 0.5rem;
+}
+
+.cadastro-button {
+  width: 100%;
+  height: 2.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s ease;
+}
+
+.cadastro-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.cadastro-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cadastro-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.cadastro-footer {
+  flex-direction: column;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.cadastro-footer-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.cadastro-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cadastro-link:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .cadastro-card {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .cadastro-title {
+    font-size: 1.5rem;
+  }
+
+  .cadastro-logo-icon {
+    width: 56px;
+    height: 56px;
+  }
+}

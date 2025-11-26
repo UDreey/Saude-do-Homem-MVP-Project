@@ -10,17 +10,16 @@ import {
   Heart,
   AlertCircle,
   CheckCircle,
+  TrendingUp,
   Users,
   Recycle,
   Car,
-  TrendingUp,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -30,32 +29,40 @@ const Dashboard = () => {
   const { exames = [], loading: examesLoading } = useExamesAPI(apiUrl, token);
   const { estatisticas } = useAtividades() || {};
   const atividadesEstaSemana = estatisticas?.atividadesEstaSemana || 0;
+  const totalAtividades = estatisticas?.totalAtividades || 0;
+  const totalMinutos = estatisticas?.totalMinutos || 0;
 
-  const [activeTab, setActiveTab] = useState("saude");
   const [stats, setStats] = useState({
     examesPendentes: 0,
     examesProximos: 0,
-    atividadesHoje: 0,
+    examesRealizados: 0,
+    atividadesEstaSemana: 0,
+    totalMinutos: 0,
   });
 
-  // 🔹 UseEffect corrigido: dependências estáveis
+  // Calcular estatísticas reais baseadas nos dados do usuário
   useEffect(() => {
     const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
 
     const proximos = exames.filter((exame) => {
       const dataExame = new Date(exame.data);
-      return (
-        dataExame >= hoje &&
-        dataExame <= new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000)
-      );
+      dataExame.setHours(0, 0, 0, 0);
+      const em7Dias = new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000);
+      return dataExame >= hoje && dataExame <= em7Dias;
     });
 
+    const examesRealizados = exames.filter((e) => e.realizado).length;
+    const examesPendentes = exames.filter((e) => !e.realizado).length;
+
     setStats({
-      examesPendentes: exames.filter((e) => !e.realizado).length,
+      examesPendentes,
       examesProximos: proximos.length,
-      atividadesHoje: atividadesEstaSemana,
+      examesRealizados,
+      atividadesEstaSemana,
+      totalMinutos,
     });
-  }, [exames, atividadesEstaSemana]); // <-- Dependências corrigidas
+  }, [exames, atividadesEstaSemana, totalMinutos]);
 
   const quickActions = [
     {
@@ -88,22 +95,60 @@ const Dashboard = () => {
     },
   ];
 
+  // Calcular horas de atividades
+  const horasAtividades = Math.floor(totalMinutos / 60);
+  const minutosRestantes = totalMinutos % 60;
+  const tempoFormatado =
+    horasAtividades > 0
+      ? `${horasAtividades}h ${minutosRestantes}min`
+      : `${totalMinutos}min`;
+
   const kpis = [
     {
-      id: "consultas",
-      label: "Consultas Realizadas",
-      subtitle: "Total de atendimentos",
-      value: exames.filter((e) => e.realizado).length,
-      trend: "+12% esta semana",
-      icon: Heart,
+      id: "exames-realizados",
+      label: "Exames Realizados",
+      subtitle: "Total de exames concluídos",
+      value: stats.examesRealizados,
+      trend:
+        stats.examesRealizados > 0 ? "Continue assim!" : "Comece a registrar",
+      icon: CheckCircle,
+      color: "#10b981",
+    },
+    {
+      id: "exames-pendentes",
+      label: "Exames Pendentes",
+      subtitle: "Aguardando realização",
+      value: stats.examesPendentes,
+      trend:
+        stats.examesPendentes > 0 ? "Não esqueça de fazer" : "Tudo em dia!",
+      icon: AlertCircle,
+      color: "#f97316",
+    },
+    {
+      id: "exames-proximos",
+      label: "Exames Próximos",
+      subtitle: "Nos próximos 7 dias",
+      value: stats.examesProximos,
+      trend:
+        stats.examesProximos > 0 ? "Agende sua consulta" : "Nenhum agendado",
+      icon: Calendar,
       color: "#2563eb",
+    },
+    {
+      id: "atividades",
+      label: "Atividades Físicas",
+      subtitle: `${stats.atividadesEstaSemana} esta semana • ${tempoFormatado} total`,
+      value: totalAtividades,
+      trend: stats.atividadesEstaSemana > 0 ? "Bom trabalho!" : "Comece hoje",
+      icon: Activity,
+      color: "#0ea5e9",
     },
     {
       id: "usuarios",
       label: "Usuários Ativos",
       subtitle: "Usuários únicos",
-      value: 89,
-      trend: "+8% este mês",
+      value: 5,
+      trend: "Comunidade ativa",
       icon: Users,
       color: "#10b981",
     },
@@ -111,8 +156,8 @@ const Dashboard = () => {
       id: "medicamentos",
       label: "Medicamentos Descartados",
       subtitle: "Descarte correto",
-      value: "15.7kg",
-      trend: "+23% este mês",
+      value: "10kg",
+      trend: "Impacto positivo",
       icon: Recycle,
       color: "#10b981",
     },
@@ -120,8 +165,8 @@ const Dashboard = () => {
       id: "deslocamentos",
       label: "Deslocamentos Evitados",
       subtitle: "Impacto ambiental",
-      value: 34,
-      trend: "+15% esta semana",
+      value: 10,
+      trend: "Sustentabilidade",
       icon: Car,
       color: "#0ea5e9",
     },
@@ -130,8 +175,8 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>Dashboard de Saúde</h1>
-        <p>Acompanhe o impacto do Health On Time na saúde e sustentabilidade</p>
+        <h1>Meu Dashboard de Saúde</h1>
+        <p>Acompanhe seus exames, atividades e cuidados com a saúde</p>
       </div>
 
       <div className="kpis-grid">
@@ -146,8 +191,16 @@ const Dashboard = () => {
                 >
                   <Icon size={24} />
                 </div>
-                <div className="kpi-trend">
-                  <TrendingUp size={14} />
+                <div
+                  className={`kpi-trend ${
+                    kpi.id === "exames-pendentes" && stats.examesPendentes > 0
+                      ? "trend-warning"
+                      : ""
+                  }`}
+                >
+                  {kpi.id !== "exames-pendentes" && <TrendingUp size={14} />}
+                  {kpi.id === "exames-pendentes" &&
+                    stats.examesPendentes > 0 && <AlertCircle size={14} />}
                   <span>{kpi.trend}</span>
                 </div>
               </div>
@@ -161,20 +214,21 @@ const Dashboard = () => {
         })}
       </div>
 
-      {/* 🔹 Tabs com onValueChange ajustado */}
-      <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val)} className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-3">
-          <TabsTrigger value="saude">Saúde</TabsTrigger>
-          <TabsTrigger value="sustentabilidade">Sustentabilidade</TabsTrigger>
-          <TabsTrigger value="prevencao">Prevenção</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      <TabsContent value={activeTab} className="mt-6">
-        <div className="charts-section">
-          {/* Gráficos de exemplo */}
-        </div>
-      </TabsContent>
+      {/* Resumo de Saúde */}
+      {exames.length === 0 && totalAtividades === 0 && (
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="empty-dashboard-state">
+              <Heart size={48} className="empty-icon" />
+              <h3>Bem-vindo ao seu Dashboard!</h3>
+              <p>
+                Comece registrando seus exames e atividades para acompanhar sua
+                saúde
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {exames.length > 0 && (
         <Card>
@@ -202,9 +256,13 @@ const Dashboard = () => {
                     <div className="exame-date">
                       <Calendar size={16} />
                       <span>
-                        {format(new Date(exame.data), "dd 'de' MMMM 'de' yyyy", {
-                          locale: ptBR,
-                        })}
+                        {format(
+                          new Date(exame.data),
+                          "dd 'de' MMMM 'de' yyyy",
+                          {
+                            locale: ptBR,
+                          }
+                        )}
                       </span>
                     </div>
                   </div>

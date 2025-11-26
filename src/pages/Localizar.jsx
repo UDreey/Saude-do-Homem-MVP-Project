@@ -20,50 +20,50 @@ const Localizar = () => {
   const servicos = [
     {
       id: 1,
-      nome: "EcoFarmácia Central",
+      nome: "SuperFarma Siqueira Campos",
       tipo: "farmacia",
       tipoLabel: "Farmácia",
       icon: Pill,
-      rating: 4.8,
-      endereco: "Av. Paulista, 1000 - Bela Vista, São Paulo",
-      telefone: "(11) 3333-4444",
-      horario: "Segunda a Sábado: 8h às 22h, Domingo: 9h às 18h",
+      rating: 4.7,
+      endereco: "Rua Santa Catarina, 224 - Siqueira Campos, Aracaju/SE",
+      telefone: "(79) 99926-0298",
+      horario: "Segunda a Sábado: 7h às 22h, Domingo: 8h às 20h",
       aceitaMedicamentos: true,
     },
     {
       id: 2,
-      nome: "Ponto Verde Sustentável",
-      tipo: "coleta",
-      tipoLabel: "Ponto de Coleta",
-      icon: Leaf,
-      rating: 4.9,
-      endereco: "Rua Augusta, 567 - Consolação, São Paulo",
-      telefone: "(11) 3555-7777",
-      horario: "Segunda a Domingo: 6h às 20h",
+      nome: "Farmácia Drogamais",
+      tipo: "farmacia",
+      tipoLabel: "Farmácia",
+      icon: Pill,
+      rating: 4.6,
+      endereco: "Rua Alagoas, 755 - Siqueira Campos, Aracaju/SE",
+      telefone: "(79) 3214-5678",
+      horario: "Segunda a Domingo: 7h às 22h",
       aceitaMedicamentos: true,
     },
     {
       id: 3,
-      nome: "UBS Vila Madalena",
-      tipo: "posto",
-      tipoLabel: "Posto de Saúde",
-      icon: Shield,
-      rating: 4.5,
-      endereco: "Rua Harmonia, 890 - Vila Madalena, São Paulo",
-      telefone: "(11) 3222-6666",
-      horario: "Segunda a Sexta: 7h às 17h",
-      aceitaMedicamentos: true,
+      nome: "Hospital de Urgência de Sergipe (HUSE)",
+      tipo: "hospital",
+      tipoLabel: "Hospital",
+      icon: Building2,
+      rating: 4.6,
+      endereco: "Av. Tancredo Neves, 5700 - Capucho, Aracaju/SE",
+      telefone: "(79) 3216-2600",
+      horario: "24 horas",
+      aceitaMedicamentos: false,
     },
     {
       id: 4,
-      nome: "Farmácia Central",
-      tipo: "farmacia",
-      tipoLabel: "Farmácia",
-      icon: Pill,
+      nome: "Hospital e Maternidade Santa Isabel",
+      tipo: "hospital",
+      tipoLabel: "Hospital",
+      icon: Building2,
       rating: 4.5,
-      endereco: "Rua das Flores, 123 - Centro",
-      telefone: "(11) 3333-4444",
-      horario: "Segunda a Sábado: 8h às 20h",
+      endereco: "Rua Dom Bosco, 72 - Suíssa, Aracaju/SE",
+      telefone: "(79) 3216-2700",
+      horario: "24 horas",
       aceitaMedicamentos: false,
     },
     {
@@ -72,22 +72,71 @@ const Localizar = () => {
       tipo: "hospital",
       tipoLabel: "Hospital",
       icon: Building2,
-      rating: 4.8,
-      endereco: "Avenida Saúde, 456 - Jardim Esperança",
-      telefone: "(11) 3555-7777",
+      rating: 4.7,
+      endereco: "Rua Guilhermino Rezende, 187 - São José, Aracaju/SE",
+      telefone: "(79) 3216-2700",
       horario: "24 horas",
       aceitaMedicamentos: false,
     },
     {
       id: 6,
-      nome: "UBS Vila Verde",
+      nome: "Ecoponto Siqueira Campos",
+      tipo: "coleta",
+      tipoLabel: "Ponto de Coleta",
+      icon: Leaf,
+      rating: 4.8,
+      endereco:
+        "Av. Augusto Franco, próximo à Uninassau - Siqueira Campos, Aracaju/SE",
+      telefone: "(79) 3212-3456",
+      horario: "Segunda a Domingo: 6h às 20h",
+      aceitaMedicamentos: true,
+    },
+    {
+      id: 7,
+      nome: "Farmácia do Trabalhador do Bairro",
+      tipo: "farmacia",
+      tipoLabel: "Farmácia",
+      icon: Pill,
+      rating: 4.5,
+      endereco: "Rua Santa Catarina - Siqueira Campos, Aracaju/SE",
+      telefone: "(79) 3214-7890",
+      horario: "Segunda a Sábado: 8h às 20h, Domingo: 9h às 18h",
+      aceitaMedicamentos: true,
+    },
+    {
+      id: 8,
+      nome: "UBS Siqueira Campos",
       tipo: "posto",
       tipoLabel: "Posto de Saúde",
       icon: Shield,
-      rating: 4.2,
-      endereco: "Rua da Saúde, 789 - Vila Verde",
-      telefone: "(11) 3222-6666",
+      rating: 4.4,
+      endereco: "Siqueira Campos, Aracaju/SE",
+      telefone: "(79) 3211-2345",
       horario: "Segunda a Sexta: 7h às 17h",
+      aceitaMedicamentos: true,
+    },
+    {
+      id: 9,
+      nome: "Hospital de Cirurgia",
+      tipo: "hospital",
+      tipoLabel: "Hospital",
+      icon: Building2,
+      rating: 4.5,
+      endereco: "Rua Dom Bosco, 722 - Centro, Aracaju/SE",
+      telefone: "(79) 3212-2000",
+      horario: "24 horas",
+      aceitaMedicamentos: false,
+    },
+    {
+      id: 10,
+      nome: "Farmácia GBarbosa - Ponto de Coleta",
+      tipo: "coleta",
+      tipoLabel: "Ponto de Coleta",
+      icon: Leaf,
+      rating: 4.7,
+      endereco: "Av. Francisco José da Fonseca, 1337 - Aracaju/SE",
+      telefone: "(79) 3214-2345",
+      horario: "Segunda a Sábado: 8h às 20h",
       aceitaMedicamentos: true,
     },
   ];
@@ -108,6 +157,13 @@ const Localizar = () => {
       servico.endereco.toLowerCase().includes(searchTerm.toLowerCase());
     return matchFilter && matchSearch;
   });
+
+  const handleNavigate = (endereco) => {
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      endereco
+    )}`;
+    window.open(mapsUrl, "_blank");
+  };
 
   return (
     <div className="localizar-page">
@@ -187,9 +243,12 @@ const Localizar = () => {
                 </div>
               )}
 
-              <button className="servico-navigate-btn">
+              <button
+                className="servico-navigate-btn"
+                onClick={() => handleNavigate(servico.endereco)}
+              >
                 <Navigation size={18} />
-                Navegar
+                Navegar no Maps
               </button>
             </div>
           );
