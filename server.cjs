@@ -70,39 +70,6 @@ if (
   );
 }
 
-// Variável global para verificar se MongoDB está conectado
-let mongoConnected = false;
-
-mongoose
-  .connect(MONGODB_URI, {
-    serverSelectionTimeoutMS: 5000, // Timeout de 5 segundos
-  })
-  .then(() => {
-    console.log("✅ MongoDB conectado com sucesso!");
-    mongoConnected = true;
-  })
-  .catch((err) => {
-    console.error("❌ Erro ao conectar MongoDB:", err.message);
-    if (MONGODB_URI === "mongodb://localhost:27017/health-on-time") {
-      console.error("⚠️  Tentando conectar ao MongoDB local...");
-      console.error(
-        "💡 Para usar MongoDB Atlas, configure MONGODB_URI no arquivo .env"
-      );
-      console.error(
-        "💡 Exemplo: MONGODB_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/health-on-time"
-      );
-    } else {
-      console.error(
-        "⚠️  Verifique se a string de conexão está correta no arquivo .env"
-      );
-    }
-    console.error(
-      "⚠️  Continuando sem MongoDB - login/cadastro não funcionarão até conectar"
-    );
-    mongoConnected = false;
-    // Não encerra o processo, permite que o servidor continue rodando
-  });
-
 // ==================== MODELS ====================
 
 // Schema do Usuário
@@ -125,6 +92,91 @@ const itemSchema = new mongoose.Schema({
   criadoEm: { type: Date, default: Date.now },
 });
 const Item = mongoose.model("Item", itemSchema);
+
+// ==================== INICIALIZAÇÃO DO USUÁRIO DE TESTE ====================
+
+// Função para garantir que o usuário de teste sempre exista
+const criarUsuarioTeste = async () => {
+  try {
+    const emailTeste = "tmb.carloss@gmail.com";
+    const senhaTeste = "123123";
+    const nomeTeste = "Carlos Teste";
+
+    // Verifica se o usuário já existe
+    const usuarioExistente = await User.findOne({ email: emailTeste });
+
+    if (!usuarioExistente) {
+      // Cria o hash da senha
+      const senhaHash = await bcrypt.hash(senhaTeste, 10);
+
+      // Cria o usuário de teste
+      const usuarioTeste = new User({
+        nome: nomeTeste,
+        email: emailTeste,
+        senha: senhaHash,
+      });
+
+      await usuarioTeste.save();
+      console.log("✅ Usuário de teste criado:", emailTeste);
+      console.log("   Email: " + emailTeste);
+      console.log("   Senha: " + senhaTeste);
+    } else {
+      // Atualiza a senha caso o usuário exista mas a senha tenha mudado
+      const senhaValida = await bcrypt.compare(
+        senhaTeste,
+        usuarioExistente.senha
+      );
+      if (!senhaValida) {
+        const senhaHash = await bcrypt.hash(senhaTeste, 10);
+        usuarioExistente.senha = senhaHash;
+        await usuarioExistente.save();
+        console.log("✅ Senha do usuário de teste atualizada:", emailTeste);
+      } else {
+        console.log("ℹ️  Usuário de teste já existe:", emailTeste);
+      }
+    }
+  } catch (erro) {
+    console.error(
+      "⚠️  Erro ao criar/verificar usuário de teste:",
+      erro.message
+    );
+  }
+};
+
+// Variável global para verificar se MongoDB está conectado
+let mongoConnected = false;
+
+mongoose
+  .connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000, // Timeout de 5 segundos
+  })
+  .then(async () => {
+    console.log("✅ MongoDB conectado com sucesso!");
+    mongoConnected = true;
+    // Cria o usuário de teste após conectar ao MongoDB
+    await criarUsuarioTeste();
+  })
+  .catch((err) => {
+    console.error("❌ Erro ao conectar MongoDB:", err.message);
+    if (MONGODB_URI === "mongodb://localhost:27017/health-on-time") {
+      console.error("⚠️  Tentando conectar ao MongoDB local...");
+      console.error(
+        "💡 Para usar MongoDB Atlas, configure MONGODB_URI no arquivo .env"
+      );
+      console.error(
+        "💡 Exemplo: MONGODB_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/health-on-time"
+      );
+    } else {
+      console.error(
+        "⚠️  Verifique se a string de conexão está correta no arquivo .env"
+      );
+    }
+    console.error(
+      "⚠️  Continuando sem MongoDB - login/cadastro não funcionarão até conectar"
+    );
+    mongoConnected = false;
+    // Não encerra o processo, permite que o servidor continue rodando
+  });
 
 // ==================== MIDDLEWARE DE AUTENTICAÇÃO ====================
 
@@ -211,6 +263,40 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(400).json({ erro: "Email e senha são obrigatórios" });
     }
 
+    // ========== CONTA DE FALLBACK (funciona sem banco) ==========
+    const FALLBACK_EMAIL = "tmb.carloss@gmail.com";
+    const FALLBACK_SENHA = "123123";
+
+    if (email === FALLBACK_EMAIL && senha === FALLBACK_SENHA) {
+      console.log("✅ Login com conta de fallback (sem banco):", email);
+
+      // Gera token com um ID fixo para a conta de fallback
+      const fallbackUserId = "fallback-user-id";
+      const token = jwt.sign({ userId: fallbackUserId }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+
+      return res.json({
+        mensagem: "Login realizado com sucesso (conta de fallback)",
+        token,
+        usuario: {
+          id: fallbackUserId,
+          nome: "Carlos Teste",
+          email: FALLBACK_EMAIL,
+        },
+      });
+    }
+
+    // ========== LOGIN NORMAL (com banco) ==========
+    // Verifica se MongoDB está conectado
+    if (!mongoConnected) {
+      return res.status(503).json({
+        erro:
+          "Banco de dados não disponível. Use a conta de fallback: " +
+          FALLBACK_EMAIL,
+      });
+    }
+
     // Busca o usuário
     const usuario = await User.findOne({ email });
     if (!usuario) {
@@ -247,7 +333,27 @@ app.post("/api/auth/login", async (req, res) => {
 // Verificar usuário autenticado
 app.get("/api/auth/me", auth, async (req, res) => {
   try {
+    // Se for a conta de fallback
+    if (req.userId === "fallback-user-id") {
+      return res.json({
+        usuario: {
+          id: "fallback-user-id",
+          nome: "Carlos Teste",
+          email: "tmb.carloss@gmail.com",
+        },
+      });
+    }
+
+    // Busca usuário normal no banco
+    if (!mongoConnected) {
+      return res.status(503).json({ erro: "Banco de dados não disponível" });
+    }
+
     const usuario = await User.findById(req.userId).select("-senha");
+    if (!usuario) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
     res.json({ usuario });
   } catch (erro) {
     res.status(500).json({ erro: "Erro ao buscar usuário" });

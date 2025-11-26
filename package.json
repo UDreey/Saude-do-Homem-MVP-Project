@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "start": "vite",
     "server": "node server.cjs",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "verificar-mongodb": "node verificar-mongodb.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
